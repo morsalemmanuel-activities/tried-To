@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Manager</title>
+    <style>
+        :root { --primary: #1e7e34; --dark: #333; --light: #f4f4f4; }
+        body { font-family: Arial, sans-serif; background: var(--light); margin: 0; padding: 20px; }
+        .container { max-width: 500px; margin: auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .hidden { display: none; }
+        input, textarea { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
+        button { width: 100%; padding: 12px; background: var(--primary); color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        .stats { display: flex; justify-content: space-between; background: #e8f5e9; padding: 15px; border-radius: 5px; margin-bottom: 20px; color: var(--primary); }
+        .card { border: 1px solid #ddd; padding: 15px; border-radius: 5px; margin-bottom: 15px; }
+    h1{color:blue;}
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Auth Section -->
+    <div id="auth-section">
+        <h1>Morsal Survey</h1>
+        <h2>Sign Up / Login</h2>
+        <input type="text" id="phone" placeholder="M-Pesa Number">
+        <input type="password" id="pin" placeholder="Enter PIN">
+        <button onclick="login()">Enter Dashboard</button>
+    </div>
+
+    <!-- Dashboard -->
+    <div id="dash-section" class="hidden">
+        <div class="stats">
+            <span>Balance: Sh <b id="bal">0</b></span>
+            <span>Daily Limit: Sh 2500</span>
+        </div>
+        <h3>Available Surveys</h3>
+        <div class="card">
+            <h4>Topic: Business Ethics</h4>
+            <p>5 Questions | Sh 500 Total</p>
+            <button onclick="showSurvey()">Start Task</button>
+        </div>
+        <hr>
+        <button style="background:#2c3e50" onclick="withdraw()">Withdraw Sh 2500</button>
+    </div>
+
+    <!-- Survey Section -->
+    <div id="survey-section" class="hidden">
+        <h3>Business Ethics Survey</h3>
+        <div id="q-list">
+            <!-- Example of 1 of 5 questions -->
+            <div class="card">
+                <p>1. Why is honesty important in business?</p>
+                <textarea id="ans1" placeholder="Write your essay..." required=""></textarea>
+            </div>
+        </div>
+        <button onclick="completeTask()">Submit Task</button>
+    </div>
+</div>
+
+<script>
+    let balance = parseInt(localStorage.getItem('userBal')) || 0;
+    document.getElementById('bal').innerText = balance;
+
+    function login() {
+        if(document.getElementById('phone').value.length < 10) return alert("Enter valid number");
+        document.getElementById('auth-section').classList.add('hidden');
+        document.getElementById('dash-section').classList.remove('hidden');
+    }
+
+    function showSurvey() {
+        document.getElementById('dash-section').classList.add('hidden');
+        document.getElementById('survey-section').classList.remove('hidden');
+    }
+
+    function completeTask() {
+        if(balance >= 2500) return alert("Daily limit reached!");
+        
+        balance += 500;
+        localStorage.setItem('userBal', balance);
+        document.getElementById('bal').innerText = balance;
+        alert("Sh 500 added! (Sh 100 per question)");
+        
+        document.getElementById('survey-section').classList.add('hidden');
+        document.getElementById('dash-section').classList.remove('hidden');
+    }
+
+    function withdraw() {
+        if(balance < 2500) {
+            alert("Minimum withdrawal is Sh 2500");
+        } else {
+            alert("Simulation: Request for Sh 2500 sent to M-Pesa number. +254740453075");
+            balance -= 2500;
+            localStorage.setItem('userBal', balance);
+            document.getElementById('bal').innerText = balance;
+        }
+    }
+</script>
+
+</body>
+</html>
